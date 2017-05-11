@@ -1,6 +1,7 @@
 class BookController < ApplicationController
 
   before_action :set_book, only: [:show, :edit, :update, :destroy]
+  after_action :redirect_root only: [:create, :update, :destroy]
   
   def index
     @books = Book.all
@@ -16,7 +17,6 @@ class BookController < ApplicationController
   def create
     book = Book.new(params[:book].permit(:title, :author))
     book.save
-    redirect_to root_path
   end
 
   def edit
@@ -24,16 +24,19 @@ class BookController < ApplicationController
 
   def update
     book.update(params[:book].permit(:title, :author))
-    redirect_to root_path
   end
 
   def destroy
     book.destroy
-    redirect_to root_path
   end
   
   private
     def set_book
       book = Book.find(params[:id])
     end
+    
+    def redirect_root
+      redirect_to root_path
+    end
+  
 end
